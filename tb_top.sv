@@ -1,6 +1,6 @@
 module tb_top;
    import uvm_pkg::*;
-   `define CLK_HALF_PERIOD 10ns
+   `define CLK_HALF_PERIOD #10
  
 	bit i_cs_n;
 	bit i_clk;
