@@ -1,6 +1,8 @@
+`define CLK_HALF_PERIOD #10
+
 module tb_top;
    import uvm_pkg::*;
-   `define CLK_HALF_PERIOD #10
+   import spi_flash_memory_pkg::*;
  
 	bit i_cs_n;
 	bit i_clk;

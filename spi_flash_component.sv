@@ -1,7 +1,5 @@
 `ifndef SPI_FLASH_COMPONENT
 `define SPI_FLASH_COMPONENT
-import uvm_pkg::*;
-`include "uvm_macros.svh"
 
 class spi_flash_component extends uvm_component ;
 	`uvm_component_utils(spi_flash_component)
