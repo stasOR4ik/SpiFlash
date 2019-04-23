@@ -3,7 +3,7 @@
 
 class spi_transaction extends uvm_sequence_item;
 
-  byte data;
+  byte unsigned data;
   time tr_beginning;
 
   `uvm_object_utils_begin(spi_transaction)
