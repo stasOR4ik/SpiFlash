@@ -23,9 +23,17 @@ class spi_flash_driver extends uvm_driver #(spi_transaction);
   virtual task run_phase(uvm_phase phase);
     forever begin
     seq_item_port.get_next_item(req);
+    drive();
     seq_item_port.item_done();
     end
   endtask : run_phase
+
+  virtual task drive();
+      for (int i = 0; i < 7; i = i +1) begin
+  	  	 @(posedge vif.i_clk);
+                 vif.i_di = req[i];
+      end    
+  endtask : drive
  
 endclass : spi_flash_driver
 `endif
