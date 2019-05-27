@@ -25,7 +25,7 @@ class spi_flash_component extends uvm_component;
 
 	bit isCommand = 1;
 
-	int counter = 1;
+	int counter = 0;
 
 	function new(string name = "spi_flash_component", uvm_component parent=null);
 		super.new(name, parent);
@@ -58,7 +58,6 @@ class spi_flash_component extends uvm_component;
 					case (counter)
 						2: begin 
 							address[23:16] = transaction.data;
-
 						end
 						3: begin 
 							address[15:8] = transaction.data;
@@ -66,16 +65,21 @@ class spi_flash_component extends uvm_component;
 						4: begin 
 							address[7:0] = transaction.data;
 						end
-						261: begin
-
-							counter = 1;
-						end
 						default : begin
-							$display("Data %h", transaction.data);
-							memory[address] = transaction.data;
-							$display("%h %h %h", memory[24'h030405], memory[24'h030406], memory[24'h030407]);
-							$display("Address %h", address);
-							address++;
+							case (transaction.status)
+								IN_PROGRESS: begin
+									$display("Data %h", transaction.data);
+									memory[address] = transaction.data;
+									$display("%h %h", memory[24'hFFFFFF], memory[24'hFFFF00]);
+									$display("Address %h", address);
+									address = address == 24'hFFFFFF ? {address[23:8], 8'h0} : address + 1;
+								end
+								END: begin
+									counter = 0;
+									isCommand = 1;
+								end
+								default :;
+							endcase
 						end
 					endcase
 
@@ -96,10 +100,15 @@ module test_tb;
    		a = new();
    		transaction = new();
 		transaction.data = 2;
-   		for (int i = 0; i < 7; i++) begin
-   			a.write(transaction);
-   			transaction.data++;
-   		end
+		a.write(transaction);
+		transaction.data = 8'hFF;
+		a.write(transaction);
+		a.write(transaction);
+		a.write(transaction);
+		transaction.data = 1;
+		a.write(transaction);
+		transaction.data = 2;
+		a.write(transaction);
    end
 endmodule
 
